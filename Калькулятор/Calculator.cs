@@ -1,4 +1,4 @@
-﻿namespace Task1
+namespace Task1
 {
     using System;
 
@@ -16,68 +16,67 @@
             Console.WriteLine("7. Декремент (--)");
 
             Console.Write("Выберите операцию (введите номер или символ): ");
-            string operation = Console.ReadLine();
-
-            double num1, num2 = 0;
-            bool isUnaryOperation = operation == "6" || operation == "++" ||
-                                  operation == "7" || operation == "--";
+            string operation = Console.ReadLine()?.Trim();
 
             Console.Write("Введите первое число: ");
-            num1 = Convert.ToDouble(Console.ReadLine());
+            double num1 = double.Parse(Console.ReadLine());
 
-            if (!isUnaryOperation)
+            double num2 = 0;
+            bool isUnary = operation == "6" || operation == "++" || 
+                          operation == "7" || operation == "--";
+
+            if (!isUnary)
             {
                 Console.Write("Введите второе число: ");
-                num2 = Convert.ToDouble(Console.ReadLine());
+                num2 = double.Parse(Console.ReadLine());
             }
 
-            double result = 0;
-            bool error = false;
-
-            switch (operation)
-            {
-                case "1":
-                case "+":
-                    result = num1 + num2;
-                    break;
-                case "2":
-                case "-":
-                    result = num1 - num2;
-                    break;
-                case "3":
-                case "*":
-                    result = num1 * num2;
-                    break;
-                case "4":
-                case "/":
-                    if (num2 != 0)
-                        result = num1 / num2;
-                    else
-                        error = true;
-                    break;
-                case "5":
-                case "%":
-                    result = num1 % num2;
-                    break;
-                case "6":
-                case "++":
-                    result = num1 + 1;
-                    break;
-                case "7":
-                case "--":
-                    result = num1 - 1;
-                    break;
-                default:
-                    Console.WriteLine("Неверная операция!");
-                    return;
-            }
+            double result = Calculate(operation, num1, num2, out bool error);
 
             if (error)
                 Console.WriteLine("Ошибка: деление на ноль!");
-            else
+            else if (operation != null)
                 Console.WriteLine($"Результат: {result}");
 
             Console.ReadKey();
+        }
+
+        static double Calculate(string operation, double num1, double num2, out bool error)
+        {
+            error = false;
+
+            switch (operation?.ToLower())
+            {
+                case "1":
+                case "+":
+                    return num1 + num2;
+                case "2":
+                case "-":
+                    return num1 - num2;
+                case "3":
+                case "*":
+                    return num1 * num2;
+                case "4":
+                case "/":
+                    if (num2 == 0)
+                    {
+                        error = true;
+                        return 0;
+                    }
+                    return num1 / num2;
+                case "5":
+                case "%":
+                    return num1 % num2;
+                case "6":
+                case "++":
+                    return num1 + 1;
+                case "7":
+                case "--":
+                    return num1 - 1;
+                default:
+                    Console.WriteLine("Неверная операция!");
+                    return 0;
+            }
         }
     }
 }
